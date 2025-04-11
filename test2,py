@@ -20,126 +20,146 @@ from selenium.webdriver.common.by import By
 from seleniumbase import SB
 
 
-chrome_options = webdriver.ChromeOptions()
-download_dir = os.path.abspath('./audiosTnu')
-os.makedirs(download_dir, exist_ok=True)
-prefs = {'download.default_directory' : download_dir}
-chrome_options.add_experimental_option('prefs', prefs)
+# def similar(a, b):
+#     return SequenceMatcher(None, a, b).ratio()
+
+# def compare_audio(file1, file2):
+
+        
+#     file1 = open(file1, "rb").read()
+#     file2 = open(file2, "rb").read()
+    
+#     sim_ratio = similar(file1, file2)
+        
+#     threshold = 0.8
 
 
-chromedriver_path = os.path.abspath("chromedriver-linux64/chromedriver")
+#     if sim_ratio > threshold:
+#         return 1
+#     else:
+#         return 0
 
-servico = Service(executable_path=chromedriver_path)
+# def CompararAudios(letraNumero, diretorioComAudios):
 
-chromium_path = "./chrome-linux64/chrome"   # Replace with the actual path
 
-# Set up Chrome options
-chrome_options.add_argument("--headless=new")
-chrome_options.binary_location = chromium_path
+#     contador = 0
+#     achou = 0
+    
+#     while True:
+#         achou = compare_audio(letraNumero, diretorioComAudios[contador])
+#         if achou == 0:
+#             contador = contador + 1
+#         else:
+#             return Path(diretorioComAudios[contador]).stem
 
-navegador = webdriver.Chrome(service=servico, options=chrome_options)
 
-navegador.get("https://www.cjf.jus.br/jurisprudencia/tnu/")
+# chrome_options = webdriver.ChromeOptions()
+# download_dir = os.path.abspath('./audiosTnu')
+# os.makedirs(download_dir, exist_ok=True)
+# prefs = {'download.default_directory' : download_dir}
+# chrome_options.add_experimental_option('prefs', prefs)
 
-#Usando o selenium para clicar no botão pesquisa avançada
+# #servico = Service(ChromeDriverManager().install())
+# servico = Service()
 
-navegador.find_element('xpath', '//*[@id="formulario:ckbAvancada"]/div[2]/span').click()
+# navegador = webdriver.Chrome(service=servico, options=chrome_options)
 
-#Usando time para fazer o Selenium esperar carregar página do navegador
+# navegador.get("https://www.cjf.jus.br/jurisprudencia/tnu/")
 
-time.sleep(1)
+# #Usando o selenium para clicar no botão pesquisa avançada
+
+# navegador.find_element('xpath', '//*[@id="formulario:ckbAvancada"]/div[2]/span').click()
+
+# #Usando time para fazer o Selenium esperar carregar página do navegador
+
+# time.sleep(1)
 
 # #Clicando e preenchendo o fomulário com as datas que queremos
 
-navegador.find_element('xpath', '//*[@id="formulario:j_idt25_input"]').send_keys("01/12/2022")
+# navegador.find_element('xpath', '//*[@id="formulario:j_idt25_input"]').send_keys("01/12/2022")
 
-navegador.find_element('xpath', '//*[@id="formulario:j_idt27_input"]').send_keys("20/12/2022")
+# navegador.find_element('xpath', '//*[@id="formulario:j_idt27_input"]').send_keys("20/12/2022")
 
-#Clicando no botão enviar, para efetuar a pesquisas
+# #Clicando no botão enviar, para efetuar a pesquisas
 
-navegador.find_element('xpath', '//*[@id="formulario:actPesquisar"]/span').click()
+# navegador.find_element('xpath', '//*[@id="formulario:actPesquisar"]/span').click()
 
-time.sleep(5)
+# time.sleep(5)
 
-soup = BeautifulSoup(navegador.page_source, "html.parser")
+# soup = BeautifulSoup(navegador.page_source, "html.parser")
 
-#Criando a lista de links do interior teor dos acordãos que queremos
+# #Criando a lista de links do interior teor dos acordãos que queremos
 
-linksInteriorTeor = []
+# linksInteriorTeor = []
 
-links = soup.findAll('a', attrs = {'target' : '_blank'})
+# links = soup.findAll('a', attrs = {'target' : '_blank'})
 
-for link in links:
-    linksInteriorTeor.append(link['href'])
-    print(link)
+# for link in links:
+#     linksInteriorTeor.append(link['href'])
+#     print(link)
 
-#Abrindo o site da TNU para pegar o áudio do Captch 
+# #Abrindo o site da TNU para pegar o áudio do Captch 
 
-numberOfLinks = len(linksInteriorTeor)
+# numberOfLinks = len(linksInteriorTeor)
 
-counter = 0
+# counter = 0
 
-while True:
-    try:
-        navegador.find_element('xpath', '//*[@id=\"formulario:tabelaDocumentos_paginator_top\"]/a[3]/span').click()
-        time.sleep(5)
-        soup = BeautifulSoup(navegador.page_source, "html.parser")
-        links = soup.findAll('a', attrs = {'target' : '_blank'})
-        for link in links:
-            linksInteriorTeor.append(link['href'])
-            print(link)
-    except Exception as e:
-        print("Erro: ", e)
-        break
+# while True:
+#     try:
+#         navegador.find_element('xpath', '//*[@id=\"formulario:tabelaDocumentos_paginator_top\"]/a[3]/span').click()
+#         time.sleep(5)
+#         soup = BeautifulSoup(navegador.page_source, "html.parser")
+#         links = soup.findAll('a', attrs = {'target' : '_blank'})
+#         for link in links:
+#             linksInteriorTeor.append(link['href'])
+#             print(link)
+#     except Exception as e:
+#         print("Erro: ", e)
+#         break
 
-time.sleep(5)
+# time.sleep(5)
         
-link_remover = 'http://www.cjf.jus.br/'
-# Remova o link da lista
-linksFiltrados = [link for link in linksInteriorTeor if link != link_remover]
+# link_remover = 'http://www.cjf.jus.br/'
+# # Remova o link da lista
+# linksFiltrados = [link for link in linksInteriorTeor if link != link_remover]
 
-numeroLinks = len(linksFiltrados)
+# numeroLinks = len(linksFiltrados)
 
-time.sleep(5)
+# time.sleep(5)
 
-  with SB(uc=True, test=True, xvfb=True) as sb:
+with SB(uc=True, test=True, xvfb=True) as sb:
+    url = "https://eproctnu.cjf.jus.br/eproc/externo_controlador.php?acao=inteiro_teor&codigo_verificador=900000280139v3&codigo_crc=8478b5bf"
+    
+    # Abre a página e tenta reconectar até 4 vezes, se necessário
+    sb.uc_open_with_reconnect(url, 4)
+    
+    # Clique no captcha (se necessário)
+    sb.uc_gui_click_captcha()
+    
+    # Agora, clica no botão com o ID 'sbmConsultar'
+    sb.click('#sbmConsultar')  # Clica no botão com o ID sbmConsultar
 
-        url = "https://eproctnu.cjf.jus.br/eproc/externo_controlador.php?acao=inteiro_teor&codigo_verificador=900000259561v9&codigo_crc=7d0a259f"
-        
-        # Abre a página e tenta reconectar até 4 vezes, se necessário
-        sb.uc_open_with_reconnect(url, 4)
-        
-        # Clique no captcha (se necessário)
-        sb.uc_gui_click_captcha()
-        
-        # Agora, clica no botão com o ID 'sbmConsultar'
-        sb.click('#sbmConsultar')  # Clica no botão com o ID sbmConsultar
+    time.sleep(4)
 
-        time.sleep(4)
+    time.sleep(4)
 
-        time.sleep(4)
+    soup = BeautifulSoup(sb.driver.page_source, "html.parser")
 
-        soup = BeautifulSoup(sb.driver.page_source, "html.parser")
+    
 
-        time.sleep(5)
+    #html_save_path = fr'request\htmlInteriorTeor\teste{counter}.html'
 
-        #html_save_path = fr'request\htmlInteriorTeor\teste{counter}.html'
+    directory = './htmlInteriorTeor'
 
-        directory = './htmlInteriorTeor'
+    # Cria o diretório se ele não existir
+    os.makedirs(directory, exist_ok=True)
 
-        # Cria o diretório se ele não existir
-        os.makedirs(directory, exist_ok=True)
+    # Caminho completo para salvar o arquivo HTML
+    html_save_path = fr'{directory}\popo{2}.html'    
 
-        # Caminho completo para salvar o arquivo HTML
-        html_save_path = fr'{directory}/popo{counter}.html'    
-
-        with open(html_save_path, 'wt', encoding='utf-8') as html_file:
-            for line in soup.prettify():
-                html_file.write(line)
-
-        time.sleep(5)
-
-        counter = counter + 1
+    with open(html_save_path, 'wt', encoding='utf-8') as html_file:
+        for line in soup.prettify():
+            html_file.write(line)
 
 # while(counter != numeroLinks):
 
